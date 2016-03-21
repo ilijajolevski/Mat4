@@ -43,42 +43,73 @@
         android:layout_marginTop="100dp" />
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/txtScore"
+        android:paddingTop="30dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="52dp">
 
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+           <EditText
+               android:layout_width="wrap_content"
+               android:id="@+id/searchTerm"
+               android:layout_weight="10"
+               android:layout_height="match_parent" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimaryDark"
+                android:onClick="BarajBe"
+                android:text="Search"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+         android:gravity="center"
+            android:layout_height="wrap_content">
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Button"
+            android:text="1fasdf"
             android:id="@+id/btn1"
-
-android:gravity="center"
+            android:backgroundTint="@color/colorPrimaryDark"
             android:onClick="klik1" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Button"
+            android:text="2"
             android:id="@+id/btn2"
-            android:gravity="center"
-            android:onClick="klik2" />
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:onClick="klik2"/>
 
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Button"
+            android:text="3"
             android:id="@+id/btn3"
-            android:gravity="center"
+            android:backgroundTint="@color/colorPrimaryDark"
             android:onClick="klik3" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:id="@+id/myTextView"
+                android:layout_height="wrap_content" />
 
-
+        </LinearLayout>
 
     </LinearLayout>
+
+
+
+
 </RelativeLayout>

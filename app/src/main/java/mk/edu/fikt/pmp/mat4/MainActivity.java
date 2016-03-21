@@ -1,5 +1,7 @@
 package mk.edu.fikt.pmp.mat4;
 
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,15 +11,27 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
+
 import java.util.Random;
+import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
 
     private int koeKopce = -1;
-    private int poeni =0;
+    private int poeni = 0;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +50,15 @@ public class MainActivity extends AppCompatActivity {
 //        });
 
         DefinirajZadaca();
+        citajRecnik();
 
+//        ImageButton imgbtn = (ImageButton) findViewById(R.id.imageButton);
+//        imgbtn.setImageDrawable(drawable.fict_logo);
+
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -61,12 +83,55 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+void citajRecnik(){
+
+    Scanner scan = new Scanner(getResources().openRawResource(R.raw.recnik));
+    String sve = "";
+    while (scan.hasNextLine()){
+        String linija = scan.nextLine();
+
+       // String[] zborcinja = linija.split("\t");
+
+        sve += linija;
+    }
+
+    TextView txt = (TextView) findViewById(R.id.myTextView);
+    txt.setText(sve);
+
+    scan.close();
+
+}
 
 
-    public void DefinirajZadaca(){
 
-        int br1=0;
-        int br2=0;
+    void NajdiZbor(String zborot){
+
+        Scanner scan = new Scanner(getResources().openRawResource(R.raw.recnik));
+        String sve = "";
+        while (scan.hasNextLine()){
+            String linija = scan.nextLine();
+
+            String[] zborcinja = linija.split("\t");
+            if (zborcinja[0]==zborot)
+                 sve = zborcinja[1];
+            else
+                sve = "nemat takov";
+        }
+
+        TextView txt = (TextView) findViewById(R.id.myTextView);
+        txt.setText(sve);
+
+        scan.close();
+
+    }
+
+
+
+
+    public void DefinirajZadaca() {
+
+        int br1 = 0;
+        int br2 = 0;
 
         int rezultat = 0;
         int gresen1 = 0;
@@ -79,14 +144,14 @@ public class MainActivity extends AppCompatActivity {
         gresen1 = rand.nextInt(200);
 
 
-        deltagresen = 1+ rand.nextInt(10);
+        deltagresen = 1 + rand.nextInt(10);
 
         koeKopce = rand.nextInt(3);
-        rezultat = br1+br2;
+        rezultat = br1 + br2;
         gresen2 = rezultat + deltagresen;
 
 
-                TextView txtZadacata = (TextView) findViewById(R.id.txtZadaca);
+        TextView txtZadacata = (TextView) findViewById(R.id.txtZadaca);
         txtZadacata.setText(String.valueOf(br1) + " + " + String.valueOf(br2));
 
         TextView score = (TextView) findViewById(R.id.txtScore);
@@ -98,37 +163,34 @@ public class MainActivity extends AppCompatActivity {
         Button btn3 = (Button) findViewById(R.id.btn3);
 
 
-
-
-        if (koeKopce==0){
+        if (koeKopce == 0) {
             btn1.setText(String.valueOf(rezultat));
             btn2.setText(String.valueOf(gresen1));
             btn3.setText(String.valueOf(gresen2));
 
-        }else
-            if(koeKopce==1){
-                btn2.setText(String.valueOf(rezultat));
-                btn1.setText(String.valueOf(gresen1));
-                btn3.setText(String.valueOf(gresen2));
-            }else
-            {
-                btn3.setText(String.valueOf(rezultat));
-                btn2.setText(String.valueOf(gresen1));
-                btn1.setText(String.valueOf(gresen2));
-            }
+        } else if (koeKopce == 1) {
+            btn2.setText(String.valueOf(rezultat));
+            btn1.setText(String.valueOf(gresen1));
+            btn3.setText(String.valueOf(gresen2));
+        } else {
+            btn3.setText(String.valueOf(rezultat));
+            btn2.setText(String.valueOf(gresen1));
+            btn1.setText(String.valueOf(gresen2));
+        }
 
     }
 
     public void klik1(View view) {
 
-        if(koeKopce==0){
+        if (koeKopce == 0) {
             poeni++;
-                    Toast t = Toast.makeText(this,"ТОЧНО", Toast.LENGTH_SHORT);
-                     t.show();
-        }else
-        {
+            Toast t = Toast.makeText(this, "ТОЧНО", Toast.LENGTH_SHORT);
+            playTocno();
+            t.show();
+        } else {
             poeni--;
-            Toast t = Toast.makeText(this,"ГРЕШКА", Toast.LENGTH_SHORT);
+            Toast t = Toast.makeText(this, "ГРЕШКА", Toast.LENGTH_SHORT);
+            playGresno();
             t.show();
         }
 
@@ -141,30 +203,95 @@ public class MainActivity extends AppCompatActivity {
         if (koeKopce == 1) {
             poeni++;
             Toast t = Toast.makeText(this, "ТОЧНО", Toast.LENGTH_SHORT);
+            playTocno();
             t.show();
         } else {
             poeni--;
             Toast t = Toast.makeText(this, "ГРЕШКА", Toast.LENGTH_SHORT);
+            playGresno();
             t.show();
         }
 
         DefinirajZadaca();
     }
 
+    public void playTocno(){
+        MediaPlayer mp = MediaPlayer.create(this,R.raw.applause);
+        mp.start();
+    }
+
+    public void playGresno(){
+        MediaPlayer mp = MediaPlayer.create(this,R.raw.buzzer);
+        mp.start();
+    }
+
     public void klik3(View view) {
 
-        if(koeKopce==2){
+        if (koeKopce == 2) {
             poeni++;
-            Toast t = Toast.makeText(this,"ТОЧНО", Toast.LENGTH_SHORT);
+            Toast t = Toast.makeText(this, "ТОЧНО", Toast.LENGTH_SHORT);
+            playTocno();
             t.show();
-        }else
-        {
+        } else {
             poeni--;
-            Toast t = Toast.makeText(this,"ГРЕШКА", Toast.LENGTH_SHORT);
+            Toast t = Toast.makeText(this, "ГРЕШКА", Toast.LENGTH_SHORT);
+            playGresno();
             t.show();
         }
 
         DefinirajZadaca();
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Main Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://mk.edu.fikt.pmp.mat4/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Main Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://mk.edu.fikt.pmp.mat4/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
+    }
+
+
+
+    public void BarajBe(View view){
+
+        EditText editt = (EditText) findViewById(R.id.searchTerm);
+        String shoDaBaram = editt.getText().toString();
+
+        NajdiZbor(shoDaBaram);
+
 
     }
 }
